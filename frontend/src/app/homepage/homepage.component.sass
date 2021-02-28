@@ -1,0 +1,108 @@
+.gridScheduleParent
+    display: grid
+    grid-template-columns: 1fr
+    grid-template-rows: 3em 1fr
+    grid-gap: 10px
+    padding: 10px
+
+.gridWeekToggle
+    grid-column-start: 1
+    grid-column-end: 2
+    grid-row-start: 1
+    grid-row-end: 2
+    display: inline-flex
+    margin: auto
+
+.tableStart
+    width: 100%
+    display: inherit
+
+.tableStartHeader
+    width: 100%
+    display: inline-flex
+
+.tableStartHeaderDay, .tableCell
+    width: 14%
+    border: 1px solid #000000
+    height: 3em
+
+.tableEmployee, .tableEmployeeCells, .tableEmployeeEdit
+    display: inline-flex
+    width: 100%
+
+.tableCell p, .tableStartHeaderDay p
+    margin-top: 3%
+    margin-left: 5%
+
+.tableCell
+    height: 3em
+
+.toggleArrow
+    height: 2em
+
+.tableEditButtons img:hover
+    cursor: pointer
+
+.tableEditButtons img
+    width: 2em
+    padding-left: 5px
+
+.tableEditButtons
+    width: 2em
+    position: absolute
+    right: 5%
+    display: inline-flex
+
+::ng-deep .ngb-tp-input-container input
+    font-size: 12px
+    padding: 0px
+
+::ng-deep .ngb-tp-input-container
+    width: 2em !important
+
+.TimePickerCell
+    display: inline-flex
+    padding-top: .2%
+
+.TimePickerCell span
+    margin: auto 5%
+
+.weekdayEdit
+    height: 100%
+
+::ng-deep .weekdayEdit .mat-form-field
+    height: 75%
+    width: 30%
+    
+::ng-deep .weekdayEdit .mat-form-field .mat-form-field-wrapper
+    margin: 0px !important
+    padding: 0px !important
+    height: 100%
+    
+::ng-deep .weekdayEdit .mat-form-field .mat-form-field-wrapper .mat-form-field-flex
+    margin: 0px !important
+    padding: 0px !important
+    height: 100%
+    
+::ng-deep .weekdayEdit .mat-form-field .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix
+    padding: 0px !important
+    border: 0px !important
+    
+::ng-deep .weekdayEdit .mat-form-field .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix .mat-input-element
+    margin-top: 15%
+    margin-left: 5%
+
+::ng-deep .modal-content
+    overflow-y: scroll
+    height: 100%
+    width: 100%
+
+::ng-deep .modal-dialog
+    height: 75%
+    width: 75%
+    max-width: 100%
+
+@media print
+    .no-print, .no-print *
+        display: none !important
+

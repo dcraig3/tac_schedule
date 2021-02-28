@@ -1,0 +1,22 @@
+<mat-tab-group>
+    <mat-tab label="Active Employees">
+        <div style="margin:2em;" class="activeEmployeeDirectory">
+            <img src="../../assets/icons/edit-regular.svg" class="activeEmployeeDirectoryButtons" (click)="editActiveEmployees()" *ngIf="!editingActiveEmployees">
+            <img src="../../assets/icons/save-solid.svg" class="activeEmployeeDirectoryButtons" (click)="editActiveEmployees()" *ngIf="editingActiveEmployees">
+            <br>
+            <ul *ngFor="let e of activeEmployees; let i = index" class="activeEmployeeList">
+                <li>
+                    <img src="../../assets/icons/trash-solid-red.svg" class="setEmployeeInactive" *ngIf="editingActiveEmployees" (click)="setEmployeeInactiveWarn(e.id)"><span>{{e.name}}</span>
+                </li>
+                <li *ngIf="i == activeEmployees.length - 1 && newEmployee">
+                    <mat-form-field appearance="outline">
+                        <input matInput type="text" name="NewEmployee" [(ngModel)]="newEmployee.name">
+                    </mat-form-field>
+                    <img src="../../assets/icons/check-solid-green.svg" (click)="saveNewEmployee()" style="width:1em; margin: 0px 5px 0px 5px;">
+                    <img src="../../assets/icons/times-solid-red.svg" (click)="removeNewEmployee()" style="width:1em">
+                </li>
+            </ul>
+            <img class="createNewEmployee" src="../../assets/icons/plus-solid.svg" (click)="addNewEmployee()">
+        </div>
+    </mat-tab>
+</mat-tab-group>

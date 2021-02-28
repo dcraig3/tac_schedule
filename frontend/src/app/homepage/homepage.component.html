@@ -1,0 +1,198 @@
+<div class="gridScheduleParent">
+    <div style="display:inline-flex;" class="gridWeekToggle">
+        <img class="toggleArrow no-print" src="../../assets/icons/arrow-right-solid.svg" style="transform: rotate(180deg);" (click)="weekBack()">
+        <span class="no-print" style="margin: auto; padding: 5px;">Week</span>
+        <img class="toggleArrow no-print" src="../../assets/icons/arrow-right-solid.svg" (click)="weekAhead()">
+        <div class="tableEditButtons no-print">
+            <img src="../../assets/icons/edit-regular.svg" (click)="toggleEdit()" *ngIf="!changingDates">
+            <img src="../../assets/icons/tools-solid.svg" (click)="openModal(content)" *ngIf="!changingDates">
+            <img src="../../assets/icons/save-solid.svg" (click)="saveEdit()" *ngIf="changingDates">
+            <img src="../../assets/icons/times-solid-red.svg" (click)="undoEdit()" *ngIf="changingDates">
+        </div>
+    </div>
+    <div class="tableStart">
+        <div class="tableStartHeader">
+            <div class="tableStartHeaderDay"></div>
+            <div class="tableStartHeaderDay">
+                <p>{{monday | date}}</p>
+            </div>
+            <div class="tableStartHeaderDay">
+                <p>{{tuesday | date}}</p>
+            </div>
+            <div class="tableStartHeaderDay">
+                <p>{{wednesday | date}}</p>
+            </div>
+            <div class="tableStartHeaderDay">
+                <p>{{thursday | date}}</p>
+            </div>
+            <div class="tableStartHeaderDay">
+                <p>{{friday | date}}</p>
+            </div>
+            <div class="tableStartHeaderDay">
+                <p>{{saturday | date}}</p>
+            </div>
+            <div class="tableStartHeaderDay">
+                <p>{{sunday | date}}</p>
+            </div>
+        </div>
+        <div *ngIf="!changingDates">
+            <div class="tableEmployee" *ngFor="let e of employees">
+                <div class="tableCell">
+                    <p style="text-transform: capitalize;">{{e?.name}}</p>
+                    <span class="no-print" style="position: absolute; margin-top: -1%; margin-left: 4%;">Hours: {{e?.hours}}</span>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.monday">
+                        {{e?.monday.startTime }} - {{e?.monday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.monday">
+
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.tuesday">
+                        {{e?.tuesday.startTime }} - {{e?.tuesday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.tuesday">
+
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.wednesday">
+                        {{e?.wednesday.startTime }} - {{e?.wednesday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.wednesday">
+
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.thursday">
+                        {{e?.thursday.startTime }} - {{e?.thursday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.thursday">
+
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.friday">
+                        {{e?.friday.startTime }} - {{e?.friday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.friday">
+
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.saturday">
+                        {{e?.saturday.startTime }} - {{e?.saturday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.saturday">
+
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.sunday">
+                        {{e?.sunday.startTime }} - {{e?.sunday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.sunday">
+
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="changingDates">
+            <div class="tableEmployeeEdit" *ngFor="let e of employees">
+                <div class="tableCell">
+                    <p style="text-transform: capitalize;">{{e?.name}}</p>
+                    <span style="position: absolute; margin-top: -1%; margin-left: 4%;">Hours: {{e?.hours}}</span>
+                </div>
+                <div class="tableCell">
+                    <div class="weekdayEdit">
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.monday.startTime">
+                        </mat-form-field>
+                        <span> - </span>
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.monday.endTime">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="tableCell">
+                    <div class="weekdayEdit">
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.tuesday.startTime">
+                        </mat-form-field>
+                        <span> - </span>
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.tuesday.endTime">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="tableCell">
+                    <div class="weekdayEdit">
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.wednesday.startTime">
+                        </mat-form-field>
+                        <span> - </span>
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.wednesday.endTime">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="tableCell">
+                    <div class="weekdayEdit">
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.thursday.startTime">
+                        </mat-form-field>
+                        <span> - </span>
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.thursday.endTime">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="tableCell">
+                    <div class="weekdayEdit">
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.friday.startTime">
+                        </mat-form-field>
+                        <span> - </span>
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.friday.endTime">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="tableCell">
+                    <div class="weekdayEdit">
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.saturday.startTime">
+                        </mat-form-field>
+                        <span> - </span>
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.saturday.endTime">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="tableCell">
+                    <div class="weekdayEdit">
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.sunday.startTime">
+                        </mat-form-field>
+                        <span> - </span>
+                        <mat-form-field appearance="outline">
+                            <input matInput type="text" name="Title" [(ngModel)]="e?.sunday.endTime">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #content let-modal let-c="close" let-d="dismiss">
+    <div class="modalHeader">
+        <button mat-button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modalBody">
+        <app-admin-modal></app-admin-modal>
+    </div>
+</ng-template>
