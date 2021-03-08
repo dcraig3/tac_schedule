@@ -11,15 +11,15 @@ import com.home.models.Employees;
 @Repository
 public interface EmployeesRepository  extends JpaRepository<Employees, Long> {
 
-    @Query("select d from Employees d")
+    @Query("select e from Employees e ORDER BY UPPER(e.name) ASC")
     public List<Employees> getAll();
     
-    @Query("select e from Employees e where e.id = :id")
+    @Query("select e from Employees e where e.id = :id ORDER BY UPPER(e.name) ASC")
     public Employees getEmployeeById(long id);
 
-    @Query("select e from Employees e where inactive = 'N'")
+    @Query("select e from Employees e where inactive = 'N' ORDER BY UPPER(e.name) ASC")
     public List<Employees> getAllEmployeed();
 
-    @Query("select e from Employees e where inactive = 'Y'")
+    @Query("select e from Employees e where inactive = 'Y' ORDER BY UPPER(e.name) ASC")
     public List<Employees> getAllUnemployeed();
 }

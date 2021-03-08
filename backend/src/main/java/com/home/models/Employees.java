@@ -23,7 +23,7 @@ public class Employees implements Serializable {
 	private long id;
     
     @Column(name = "name")
-    private String employeeName;
+    private String name;
     
     @Column(name = "inactive")
     private String inactive;
@@ -37,11 +37,11 @@ public class Employees implements Serializable {
 	}
 
 	public String getName() {
-		return employeeName;
+		return name;
 	}
 
-	public void setName(String employeeName) {
-		this.employeeName = employeeName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getInactive() {

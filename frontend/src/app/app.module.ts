@@ -30,6 +30,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 
 
 import { AdminModalComponent } from './admin-modal/admin-modal.component';
+import { PrintViewComponent } from './print-view/print-view.component';
 
 
 
@@ -38,6 +39,7 @@ import { AdminModalComponent } from './admin-modal/admin-modal.component';
     AppComponent,
     HomepageComponent,
     AdminModalComponent,
+    PrintViewComponent,
   ],
   imports: [
     BrowserModule,

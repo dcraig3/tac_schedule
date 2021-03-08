@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { Timestamp, scheduled } from 'rxjs';
-import { NgbModalConfig, NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+// import { Timestamp, scheduled } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import 'moment-timezone';
 import { EmployeesService } from '../services/employees.service';
 import { ScheduleService } from '../services/schedule.service';
-import { CombineLatestOperator } from 'rxjs/internal/observable/combineLatest';
-import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
+// import { CombineLatestOperator } from 'rxjs/internal/observable/combineLatest';
+// import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
+import { Router } from '@angular/router';
+import { SelectedWeekService } from '../services/selected-week.service';
 
 @Component({
   selector: 'app-homepage',
@@ -44,6 +46,8 @@ export class HomepageComponent implements OnInit {
     private employeeService: EmployeesService,
     private scheduleService: ScheduleService,
     private modalService: NgbModal,
+    private router: Router,
+    private printWeek: SelectedWeekService,
   ) { }
 
 
@@ -263,5 +267,18 @@ export class HomepageComponent implements OnInit {
     const end = moment(endTime);
     // console.log(end.diff(start, 'hours'));
     this.employees[id].hours = this.employees[id].hours + end.diff(start, 'hours');
+  }
+
+  printPage() {
+    this.printWeek.setWeekToPrint(this.employees);
+    this.printWeek.setWeek({
+      monday: this.monday,
+      tuesday: this.tuesday,
+      wednesday: this.wednesday,
+      thursday: this.thursday,
+      friday: this.friday,
+      saturday: this.saturday,
+      sunday: this.sunday
+    });
   }
 }

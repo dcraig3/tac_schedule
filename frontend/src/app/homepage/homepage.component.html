@@ -5,6 +5,8 @@
         <img class="toggleArrow no-print" src="../../assets/icons/arrow-right-solid.svg" (click)="weekAhead()">
         <div class="tableEditButtons no-print">
             <img src="../../assets/icons/edit-regular.svg" (click)="toggleEdit()" *ngIf="!changingDates">
+            <!-- <a style="display:none" #print href="/#/print/{{selectedItem.id}}" target="_blank"></a> -->
+            <img src="../../assets/icons/print-solid.svg" (click)="printPage()" *ngIf="!changingDates" [routerLink]="['/print']">
             <img src="../../assets/icons/tools-solid.svg" (click)="openModal(content)" *ngIf="!changingDates">
             <img src="../../assets/icons/save-solid.svg" (click)="saveEdit()" *ngIf="changingDates">
             <img src="../../assets/icons/times-solid-red.svg" (click)="undoEdit()" *ngIf="changingDates">
