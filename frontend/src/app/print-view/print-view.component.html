@@ -1,89 +1,91 @@
-<div>
-    <div class="tableStartHeader">
-        <div class="tableStartHeaderDay"></div>
-        <div class="tableStartHeaderDay">
-            <p>{{weekdays.monday | date}}</p>
-        </div>
-        <div class="tableStartHeaderDay">
-            <p>{{weekdays.tuesday | date}}</p>
-        </div>
-        <div class="tableStartHeaderDay">
-            <p>{{weekdays.wednesday | date}}</p>
-        </div>
-        <div class="tableStartHeaderDay">
-            <p>{{weekdays.thursday | date}}</p>
-        </div>
-        <div class="tableStartHeaderDay">
-            <p>{{weekdays.friday | date}}</p>
-        </div>
-        <div class="tableStartHeaderDay">
-            <p>{{weekdays.saturday | date}}</p>
-        </div>
-        <div class="tableStartHeaderDay">
-            <p>{{weekdays.sunday | date}}</p>
-        </div>
-    </div>
-    <div class="tableEmployee" *ngFor="let e of employees">
-        <div class="tableCell">
-            <p style="text-transform: capitalize;">{{e?.name}}</p>
-            <span class="no-print" style="position: absolute; margin-top: -1%; margin-left: 4%;">Hours:
-                {{e?.hours}}</span>
-        </div>
-        <div class="tableCell">
-            <p *ngIf="e?.monday">
-                {{e?.monday.startTime }} - {{e?.monday.endTime }}
-            </p>
-            <p *ngIf="!e?.monday">
+<div class="page" size="A4">
+    <div class="rotate">
+        <div class="pageView">
+            <div class="tableStartHeader">
+                <div class="tableStartHeaderNoDay"></div>
+                <div class="tableStartHeaderDay">
+                    <p>{{weekdays.monday | date}}</p>
+                </div>
+                <div class="tableStartHeaderDay">
+                    <p>{{weekdays.tuesday | date}}</p>
+                </div>
+                <div class="tableStartHeaderDay">
+                    <p>{{weekdays.wednesday | date}}</p>
+                </div>
+                <div class="tableStartHeaderDay">
+                    <p>{{weekdays.thursday | date}}</p>
+                </div>
+                <div class="tableStartHeaderDay">
+                    <p>{{weekdays.friday | date}}</p>
+                </div>
+                <div class="tableStartHeaderDay">
+                    <p>{{weekdays.saturday | date}}</p>
+                </div>
+                <div class="tableStartHeaderDay tableStartHeaderSunday">
+                    <p>{{weekdays.sunday | date}}</p>
+                </div>
+            </div>
+            <div class="tableEmployee" *ngFor="let e of employees; let i=index" [ngClass]="i % 2 ? 'dark' : 'light'">
+                <div class="tableCellName">
+                    <p style="text-transform: capitalize;">{{e?.name}}</p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.monday">
+                        {{e?.monday.startTime }} - {{e?.monday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.monday">
 
-            </p>
-        </div>
-        <div class="tableCell">
-            <p *ngIf="e?.tuesday">
-                {{e?.tuesday.startTime }} - {{e?.tuesday.endTime }}
-            </p>
-            <p *ngIf="!e?.tuesday">
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.tuesday">
+                        {{e?.tuesday.startTime }} - {{e?.tuesday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.tuesday">
 
-            </p>
-        </div>
-        <div class="tableCell">
-            <p *ngIf="e?.wednesday">
-                {{e?.wednesday.startTime }} - {{e?.wednesday.endTime }}
-            </p>
-            <p *ngIf="!e?.wednesday">
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.wednesday">
+                        {{e?.wednesday.startTime }} - {{e?.wednesday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.wednesday">
 
-            </p>
-        </div>
-        <div class="tableCell">
-            <p *ngIf="e?.thursday">
-                {{e?.thursday.startTime }} - {{e?.thursday.endTime }}
-            </p>
-            <p *ngIf="!e?.thursday">
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.thursday">
+                        {{e?.thursday.startTime }} - {{e?.thursday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.thursday">
 
-            </p>
-        </div>
-        <div class="tableCell">
-            <p *ngIf="e?.friday">
-                {{e?.friday.startTime }} - {{e?.friday.endTime }}
-            </p>
-            <p *ngIf="!e?.friday">
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.friday">
+                        {{e?.friday.startTime }} - {{e?.friday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.friday">
 
-            </p>
-        </div>
-        <div class="tableCell">
-            <p *ngIf="e?.saturday">
-                {{e?.saturday.startTime }} - {{e?.saturday.endTime }}
-            </p>
-            <p *ngIf="!e?.saturday">
+                    </p>
+                </div>
+                <div class="tableCell">
+                    <p *ngIf="e?.saturday">
+                        {{e?.saturday.startTime }} - {{e?.saturday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.saturday">
 
-            </p>
-        </div>
-        <div class="tableCell">
-            <p *ngIf="e?.sunday">
-                {{e?.sunday.startTime }} - {{e?.sunday.endTime }}
-            </p>
-            <p *ngIf="!e?.sunday">
+                    </p>
+                </div>
+                <div class="tableCell tableCellSunday">
+                    <p *ngIf="e?.sunday">
+                        {{e?.sunday.startTime }} - {{e?.sunday.endTime }}
+                    </p>
+                    <p *ngIf="!e?.sunday">
 
-            </p>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

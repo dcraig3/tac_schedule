@@ -1,0 +1,50 @@
+body 
+  background: rgb(204,204,204)
+
+.page
+  background: white
+  display: block
+  margin: 0 auto
+  margin-bottom: 0.5cm
+
+.page[size="A4"]
+  width: 21cm
+  height: 29.7cm
+
+.rotate
+    transform: rotate(90deg)
+    // height: 21cm
+    // width: 29.7cm
+
+.pageView
+    height: 21cm
+    width: 29.7cm
+    border-top: 2px solid #000000
+    
+.tableEmployee, .tableStartHeader
+    display: flex
+
+.tableStartHeaderDay, .tableCell, .tableCellName, .tableStartHeaderNoDay
+    width: 14em
+    border-bottom: 2px solid #000000
+
+.tableStartHeaderNoDay, .tableCellName
+    border-left: 2px solid #000000
+
+.tableCell, .tableStartHeaderDay
+    border-left: 2px solid #000000
+
+.tableCellSunday, .tableStartHeaderSunday
+    border-right: 2px solid #000000
+
+.light .tableCell, .light .tableCellName
+    background: #D4D4D4
+
+.dark .tableCell, .dark .tableCellName
+    background: #B4B4B4
+
+.tableStartHeaderDay, .tableStartHeaderNoDay
+    background: #909090
+
+.tableCell p, .tableStartHeaderDay p
+    text-align: center
