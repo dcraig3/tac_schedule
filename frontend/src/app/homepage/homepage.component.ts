@@ -41,6 +41,18 @@ export class HomepageComponent implements OnInit {
   changingDates = false;
   editingSchedule = false;
   daySchedule = { employeeId: null, startTime: '', endTime: '' };
+  employeesNextWeek = [{
+    id: null,
+    name: null,
+    hours: 0,
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+    friday: null,
+    saturday: null,
+    sunday: null
+  }];
 
   constructor(
     private employeeService: EmployeesService,
@@ -164,7 +176,7 @@ export class HomepageComponent implements OnInit {
           }
         });
     }
-    console.log(this.employees);
+    // console.log(this.employees);
   }
 
   getMonday(date) {
@@ -211,7 +223,7 @@ export class HomepageComponent implements OnInit {
   async uploadSchedule(employeeDay, day) {
     if (employeeDay.startTime !== `` && employeeDay.endTime !== ``) {
       if (employeeDay.startTime === '0') {
-        console.log(employeeDay);
+        // console.log(employeeDay);
         await this.scheduleService.removeFromSchedule(employeeDay.id).toPromise().then();
       } else {
         // console.log(`day`, day);
@@ -269,8 +281,11 @@ export class HomepageComponent implements OnInit {
     this.employees[id].hours = this.employees[id].hours + end.diff(start, 'hours');
   }
 
-  printPage() {
-    this.printWeek.setWeekToPrint(this.employees);
+  async printPage() {
+    await this.getActiveEmployeesNextWeek();
+    console.log(this.employees);
+    this.printWeek.setWeekToPrint(this.employees, this.employeesNextWeek);
+    // debugger;
     this.printWeek.setWeek({
       monday: this.monday,
       tuesday: this.tuesday,
@@ -280,5 +295,115 @@ export class HomepageComponent implements OnInit {
       saturday: this.saturday,
       sunday: this.sunday
     });
+    let monday = new Date(), tuesday = new Date(), wednesday = new Date(), thursday = new Date(),
+      friday = new Date(), saturday = new Date(), sunday = new Date()
+    this.printWeek.setNextWeek({
+      monday: monday.setDate(this.monday.getDate() + 7),
+      tuesday: tuesday.setDate(this.tuesday.getDate() + 7),
+      wednesday: wednesday.setDate(this.wednesday.getDate() + 7),
+      thursday: thursday.setDate(this.thursday.getDate() + 7),
+      friday: friday.setDate(this.friday.getDate() + 7),
+      saturday: saturday.setDate(this.saturday.getDate() + 7),
+      sunday: sunday.setDate(this.sunday.getDate() + 7)
+    });
+  }
+
+  async getActiveEmployeesNextWeek() {
+    let newMonday = new Date();
+    newMonday.setDate(this.monday.getDate() + 7);
+    let newSunday = new Date();
+    newSunday.setDate(this.sunday.getDate() + 7);
+    this.employeesNextWeek = [{
+      id: null,
+      name: null,
+      hours: 0,
+      monday: null,
+      tuesday: null,
+      wednesday: null,
+      thursday: null,
+      friday: null,
+      saturday: null,
+      sunday: null
+    }];
+    await this.employeeService.getAllActiveEmployees().toPromise().then(res => {
+      this.employeesNextWeek = res as any;
+    });
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < this.employeesNextWeek.length; i++) {
+      this.employeesNextWeek[i].hours = 0;
+      // set times as blank by default, used to stop errors when creating placeholders for editing
+      this.employeesNextWeek[i].monday = { id: null, employeeId: this.employeesNextWeek[i].id, startTime: '', endTime: '' };
+      this.employeesNextWeek[i].tuesday = { id: null, employeeId: this.employeesNextWeek[i].id, startTime: '', endTime: '' };
+      this.employeesNextWeek[i].wednesday = { id: null, employeeId: this.employeesNextWeek[i].id, startTime: '', endTime: '' };
+      this.employeesNextWeek[i].thursday = { id: null, employeeId: this.employeesNextWeek[i].id, startTime: '', endTime: '' };
+      this.employeesNextWeek[i].friday = { id: null, employeeId: this.employeesNextWeek[i].id, startTime: '', endTime: '' };
+      this.employeesNextWeek[i].saturday = { id: null, employeeId: this.employeesNextWeek[i].id, startTime: '', endTime: '' };
+      this.employeesNextWeek[i].sunday = { id: null, employeeId: this.employeesNextWeek[i].id, startTime: '', endTime: '' };
+      // get schedules and reassign them to something easy to display and manipulate on the frontend
+      this.scheduleService.getAllScheduledByWeekByEmployee(moment(newMonday).format('YYYY-MM-DD'),
+        moment(newSunday).format('YYYY-MM-DD'), this.employeesNextWeek[i].id).subscribe(res => {
+          // tslint:disable-next-line: prefer-for-of
+          for (let r = 0; r < res.length; r++) {
+            // LT format looks like '1:00 PM'
+            if (moment(res[r].startTime).format('dddd') === 'Monday') {
+              this.employeesNextWeek[i].monday = {
+                id: res[r].id, employeeId: this.employeesNextWeek[i].id, startTime: moment(res[r].startTime).format('LT'),
+                endTime: moment(res[r].endTime).format('LT')
+              };
+              this.calculateEmployeeWeeklyHours(i,
+                res[r].startTime, res[r].endTime);
+            }
+            if (moment(res[r].startTime).format('dddd') === 'Tuesday') {
+              this.employeesNextWeek[i].tuesday = {
+                id: res[r].id, employeeId: this.employeesNextWeek[i].id, startTime: moment(res[r].startTime).format('LT'),
+                endTime: moment(res[r].endTime).format('LT')
+              };
+              this.calculateEmployeeWeeklyHours(i,
+                res[r].startTime, res[r].endTime);
+            }
+            if (moment(res[r].startTime).format('dddd') === 'Wednesday') {
+              this.employeesNextWeek[i].wednesday = {
+                id: res[r].id, employeeId: this.employeesNextWeek[i].id,
+                startTime: moment(res[r].startTime).format('LT'), endTime: moment(res[r].endTime).format('LT')
+              };
+              this.calculateEmployeeWeeklyHours(i,
+                res[r].startTime, res[r].endTime);
+            }
+            if (moment(res[r].startTime).format('dddd') === 'Thursday') {
+              this.employeesNextWeek[i].thursday = {
+                id: res[r].id, employeeId: this.employeesNextWeek[i].id,
+                startTime: moment(res[r].startTime).format('LT'), endTime: moment(res[r].endTime).format('LT')
+              };
+              this.calculateEmployeeWeeklyHours(i,
+                res[r].startTime, res[r].endTime);
+            }
+            if (moment(res[r].startTime).format('dddd') === 'Friday') {
+              this.employeesNextWeek[i].friday = {
+                id: res[r].id, employeeId: this.employeesNextWeek[i].id, startTime: moment(res[r].startTime).format('LT'),
+                endTime: moment(res[r].endTime).format('LT')
+              };
+              this.calculateEmployeeWeeklyHours(i,
+                res[r].startTime, res[r].endTime);
+            }
+            if (moment(res[r].startTime).format('dddd') === 'Saturday') {
+              this.employeesNextWeek[i].saturday = {
+                id: res[r].id, employeeId: this.employeesNextWeek[i].id,
+                startTime: moment(res[r].startTime).format('LT'), endTime: moment(res[r].endTime).format('LT')
+              };
+              this.calculateEmployeeWeeklyHours(i,
+                res[r].startTime, res[r].endTime);
+            }
+            if (moment(res[r].startTime).format('dddd') === 'Sunday') {
+              this.employeesNextWeek[i].sunday = {
+                id: res[r].id, employeeId: this.employeesNextWeek[i].id, startTime: moment(res[r].startTime).format('LT'),
+                endTime: moment(res[r].endTime).format('LT')
+              };
+              this.calculateEmployeeWeeklyHours(i,
+                res[r].startTime, res[r].endTime);
+            }
+          }
+        });
+    }
+    console.log(this.employeesNextWeek);
   }
 }
