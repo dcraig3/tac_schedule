@@ -15,25 +15,25 @@
     <div class="tableStart">
         <div class="tableStartHeader">
             <div class="tableStartHeaderDay"></div>
-            <div class="tableStartHeaderDay">
+            <div class="tableStartHeaderDay" [ngClass]="isHoliday[0] ? 'holiday' : 'notHoliday'">
                 <p>{{monday | date}}</p>
             </div>
-            <div class="tableStartHeaderDay">
+            <div class="tableStartHeaderDay" [ngClass]="isHoliday[1] ? 'holiday' : 'notHoliday'">
                 <p>{{tuesday | date}}</p>
             </div>
-            <div class="tableStartHeaderDay">
+            <div class="tableStartHeaderDay" [ngClass]="isHoliday[2] ? 'holiday' : 'notHoliday'">
                 <p>{{wednesday | date}}</p>
             </div>
-            <div class="tableStartHeaderDay">
+            <div class="tableStartHeaderDay" [ngClass]="isHoliday[3] ? 'holiday' : 'notHoliday'">
                 <p>{{thursday | date}}</p>
             </div>
-            <div class="tableStartHeaderDay">
+            <div class="tableStartHeaderDay" [ngClass]="isHoliday[4] ? 'holiday' : 'notHoliday'">
                 <p>{{friday | date}}</p>
             </div>
-            <div class="tableStartHeaderDay">
+            <div class="tableStartHeaderDay" [ngClass]="isHoliday[5] ? 'holiday' : 'notHoliday'">
                 <p>{{saturday | date}}</p>
             </div>
-            <div class="tableStartHeaderDay">
+            <div class="tableStartHeaderDay" [ngClass]="isHoliday[6] ? 'holiday' : 'notHoliday'">
                 <p>{{sunday | date}}</p>
             </div>
         </div>
@@ -41,7 +41,8 @@
             <div class="tableEmployee" *ngFor="let e of employees">
                 <div class="tableCell">
                     <p style="text-transform: capitalize;">{{e?.name}}</p>
-                    <span class="no-print" style="position: absolute; margin-top: -1%; margin-left: 4%;">Hours: {{e?.hours}}</span>
+                    <span class="no-print" style="position: absolute; margin-top: -1%; margin-left: 4%;">Hours:
+                        {{e?.hours}}</span>
                 </div>
                 <div class="tableCell">
                     <p *ngIf="e?.monday">
@@ -116,6 +117,7 @@
                         <mat-form-field appearance="outline">
                             <input matInput type="text" name="Title" [(ngModel)]="e?.monday.endTime">
                         </mat-form-field>
+                        <img src="../../assets/icons/times-solid-red.svg" (click)="removeFromSchedule(e?.id, 'monday')" *ngIf="e?.monday.startTime != ''">
                     </div>
                 </div>
                 <div class="tableCell">
@@ -127,6 +129,7 @@
                         <mat-form-field appearance="outline">
                             <input matInput type="text" name="Title" [(ngModel)]="e?.tuesday.endTime">
                         </mat-form-field>
+                        <img src="../../assets/icons/times-solid-red.svg" (click)="removeFromSchedule(e?.id, 'tuesday')" *ngIf="e?.tuesday.startTime != ''">
                     </div>
                 </div>
                 <div class="tableCell">
@@ -138,6 +141,7 @@
                         <mat-form-field appearance="outline">
                             <input matInput type="text" name="Title" [(ngModel)]="e?.wednesday.endTime">
                         </mat-form-field>
+                        <img src="../../assets/icons/times-solid-red.svg" (click)="removeFromSchedule(e?.id, 'wednesday')" *ngIf="e?.wednesday.startTime != ''">
                     </div>
                 </div>
                 <div class="tableCell">
@@ -149,6 +153,7 @@
                         <mat-form-field appearance="outline">
                             <input matInput type="text" name="Title" [(ngModel)]="e?.thursday.endTime">
                         </mat-form-field>
+                        <img src="../../assets/icons/times-solid-red.svg" (click)="removeFromSchedule(e?.id, 'thursday')" *ngIf="e?.thursday.startTime != ''">
                     </div>
                 </div>
                 <div class="tableCell">
@@ -160,6 +165,7 @@
                         <mat-form-field appearance="outline">
                             <input matInput type="text" name="Title" [(ngModel)]="e?.friday.endTime">
                         </mat-form-field>
+                        <img src="../../assets/icons/times-solid-red.svg" (click)="removeFromSchedule(e?.id, 'friday')" *ngIf="e?.friday.startTime != ''">
                     </div>
                 </div>
                 <div class="tableCell">
@@ -171,6 +177,7 @@
                         <mat-form-field appearance="outline">
                             <input matInput type="text" name="Title" [(ngModel)]="e?.saturday.endTime">
                         </mat-form-field>
+                        <img src="../../assets/icons/times-solid-red.svg" (click)="removeFromSchedule(e?.id, 'saturday')" *ngIf="e?.saturday.startTime != ''">
                     </div>
                 </div>
                 <div class="tableCell">
@@ -182,6 +189,7 @@
                         <mat-form-field appearance="outline">
                             <input matInput type="text" name="Title" [(ngModel)]="e?.sunday.endTime">
                         </mat-form-field>
+                        <img src="../../assets/icons/times-solid-red.svg" (click)="removeFromSchedule(e?.id, 'sunday')" *ngIf="e?.sunday.startTime != ''">
                     </div>
                 </div>
             </div>

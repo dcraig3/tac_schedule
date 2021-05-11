@@ -1,13 +1,10 @@
+// Good luck debugging fam, you did not know how this worked when you wrote it
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
-// import { Timestamp, scheduled } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import 'moment-timezone';
 import { EmployeesService } from '../services/employees.service';
 import { ScheduleService } from '../services/schedule.service';
-// import { CombineLatestOperator } from 'rxjs/internal/observable/combineLatest';
-// import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
-import { Router } from '@angular/router';
 import { SelectedWeekService } from '../services/selected-week.service';
 
 @Component({
@@ -53,18 +50,144 @@ export class HomepageComponent implements OnInit {
     saturday: null,
     sunday: null
   }];
+  holidays: any[];
+  isHoliday = [false, false, false, false, false, false, false];
 
   constructor(
     private employeeService: EmployeesService,
     private scheduleService: ScheduleService,
     private modalService: NgbModal,
-    private router: Router,
     private printWeek: SelectedWeekService,
   ) { }
 
 
   ngOnInit() {
+    this.getHolidays();
     this.setThisWeek(this.TODAY);
+  }
+
+  getHolidays() {
+    // All information was used in a prior excel spreadsheet and converted into angular for use in determining holidays
+    // calculation from excel are as follows
+    //
+    // New Years Day - =WORKDAY(DATE(CalendarYear,1,1),--(WEEKDAY(DATE(CalendarYear,1,1),2)>5))
+    // Martin Luther King, Jr. Birthday - =DATE(CalendarYear,1,1)+14+CHOOSE(WEEKDAY(DATE(CalendarYear,1,1)),1,0,6,5,4,3,2)
+    // President's Day - =DATE(CalendarYear,2,1)+14+CHOOSE(WEEKDAY(DATE(CalendarYear,2,1)),1,0,6,5,4,3,2)
+    // Memorial Day - =DATE(CalendarYear,6,1)-WEEKDAY(DATE(CalendarYear,6,6))
+    // Independence Day - =DATE(CalendarYear,7,4)
+    // Labor Day - =DATE(CalendarYear,9,1)+CHOOSE(WEEKDAY(DATE(CalendarYear,9,1)),1,0,6,5,4,3,2)
+    // Columbus Day - =DATE(CalendarYear,10,1)+7+CHOOSE(WEEKDAY(DATE(CalendarYear,10,1)),1,0,6,5,4,3,2)
+    // Veterans Day - =DATE(CalendarYear,11,11)
+    // Thanksgiving Day - =DATE(CalendarYear,11,1)+21+CHOOSE(WEEKDAY(DATE(CalendarYear,11,1)),4,3,2,1,0,6,5)
+    // Christmas Day - =DATE(CalendarYear,12,25)
+    const THIS_YEAR = this.TODAY.getFullYear();
+    const NewYearsDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: 1,
+      month: 0
+    }).toDate();
+    const MartinLutherKingJrBirthday = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: NewYearsDay.getDate() + this.chooseDay(NewYearsDay.getDay(), [1, 0, 6, 5, 4, 3, 2], 14),
+      month: 0
+    }).toDate();
+    const PresidentsDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: moment().set({ year: THIS_YEAR, month: 1, date: 1 }).toDate().getDate() +
+        this.chooseDay(moment().set({ year: THIS_YEAR, month: 1, date: 1 }).toDate().getDay(),
+          [1, 0, 6, 5, 4, 3, 2], 14),
+      month: 1
+    }).toDate();
+    const MemorialDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: moment().set({ year: THIS_YEAR, month: 5, date: 1 }).toDate().getDate(),
+      month: 5
+    }).subtract(moment().set({ year: THIS_YEAR, month: 5, date: 6 }).toDate().getDay() + 1, 'days').toDate();
+    const IndependenceDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: 4,
+      month: 6
+    }).toDate();
+    const LaborDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: moment().set({ year: THIS_YEAR, month: 8, date: 1 }).toDate().getDate() +
+        this.chooseDay(moment().set({ year: THIS_YEAR, month: 8, date: 1 }).toDate().getDay(),
+          [1, 0, 6, 5, 4, 3, 2], 0),
+      month: 8
+    }).toDate();
+    const ColumbusDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: moment().set({ year: THIS_YEAR, month: 9, date: 1 }).toDate().getDate() +
+        this.chooseDay(moment().set({ year: THIS_YEAR, month: 9, date: 1 }).toDate().getDay(),
+          [1, 0, 6, 5, 4, 3, 2], 7),
+      month: 9
+    }).toDate();
+    const VeteransDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: 11,
+      month: 10
+    }).toDate();
+    const ThanksgivingDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: moment().set({ year: THIS_YEAR, month: 10, date: 1 }).toDate().getDate() +
+        this.chooseDay(moment().set({ year: THIS_YEAR, month: 10, date: 1 }).toDate().getDay(),
+          [4, 3, 2, 1, 0, 6, 5], 21),
+      month: 10
+    }).toDate();
+    const ChristmasDay = moment().set({
+      year: THIS_YEAR,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      date: 25,
+      month: 11
+    }).toDate();
+    this.holidays = [
+      NewYearsDay, MartinLutherKingJrBirthday, PresidentsDay, MemorialDay, IndependenceDay,
+      LaborDay, ColumbusDay, VeteransDay, ThanksgivingDay, ChristmasDay
+    ];
+  }
+
+  chooseDay(weekday, numArray, extraDays) {
+    const day = numArray[weekday] + extraDays;
+    return day;
   }
 
   setThisWeek(date) {
@@ -72,15 +195,43 @@ export class HomepageComponent implements OnInit {
       this.changingDates = true;
       const MONDAY = this.getMonday(date);
       // Moment is needed due to a weird bug with Date()
-      this.monday = moment(MONDAY).zone('+0600').toDate();
-      this.tuesday = moment(MONDAY).zone('+0600').add(1, 'days').toDate();
-      this.wednesday = moment(MONDAY).zone('+0600').add(2, 'days').toDate();
-      this.thursday = moment(MONDAY).zone('+0600').add(3, 'days').toDate();
-      this.friday = moment(MONDAY).zone('+0600').add(4, 'days').toDate();
-      this.saturday = moment(MONDAY).zone('+0600').add(5, 'days').toDate();
-      this.sunday = moment(MONDAY).zone('+0600').add(6, 'days').toDate();
+      this.monday = moment(MONDAY).set({ hour: 12, minute: 0, second: 0, millisecond: 0, }).toDate();
+      this.tuesday = moment(MONDAY).set({ hour: 12, minute: 0, second: 0, millisecond: 0, }).add(1, 'days').toDate();
+      this.wednesday = moment(MONDAY).set({ hour: 12, minute: 0, second: 0, millisecond: 0, }).add(2, 'days').toDate();
+      this.thursday = moment(MONDAY).set({ hour: 12, minute: 0, second: 0, millisecond: 0, }).add(3, 'days').toDate();
+      this.friday = moment(MONDAY).set({ hour: 12, minute: 0, second: 0, millisecond: 0, }).add(4, 'days').toDate();
+      this.saturday = moment(MONDAY).set({ hour: 12, minute: 0, second: 0, millisecond: 0, }).add(5, 'days').toDate();
+      this.sunday = moment(MONDAY).set({ hour: 12, minute: 0, second: 0, millisecond: 0, }).add(6, 'days').toDate();
+      this.determineHolidays();
       this.changingDates = false;
       this.getActiveEmployees();
+    }
+  }
+
+  determineHolidays() {
+    this.isHoliday = [false, false, false, false, false, false, false];
+    for (let i = 0; this.holidays.length > i; i++) {
+      if (this.monday.toString() === this.holidays[i].toString()) {
+        this.isHoliday[0] = true;
+      }
+      if (this.tuesday.toString() === this.holidays[i].toString()) {
+        this.isHoliday[1] = true;
+      }
+      if (this.wednesday.toString() === this.holidays[i].toString()) {
+        this.isHoliday[2] = true;
+      }
+      if (this.thursday.toString() === this.holidays[i].toString()) {
+        this.isHoliday[3] = true;
+      }
+      if (this.friday.toString() === this.holidays[i].toString()) {
+        this.isHoliday[4] = true;
+      }
+      if (this.saturday.toString() === this.holidays[i].toString()) {
+        this.isHoliday[5] = true;
+      }
+      if (this.sunday.toString() === this.holidays[i].toString()) {
+        this.isHoliday[6] = true;
+      }
     }
   }
 
@@ -113,7 +264,7 @@ export class HomepageComponent implements OnInit {
       this.employees[i].sunday = { id: null, employeeId: this.employees[i].id, startTime: '', endTime: '' };
       // get schedules and reassign them to something easy to display and manipulate on the frontend
       this.scheduleService.getAllScheduledByWeekByEmployee(moment(this.monday).format('YYYY-MM-DD'),
-        moment(this.sunday).format('YYYY-MM-DD'), this.employees[i].id).subscribe(res => {
+        moment(this.monday).add(7, 'days').format('YYYY-MM-DD'), this.employees[i].id).subscribe(res => {
           // tslint:disable-next-line: prefer-for-of
           for (let r = 0; r < res.length; r++) {
             // LT format looks like '1:00 PM'
@@ -176,7 +327,6 @@ export class HomepageComponent implements OnInit {
           }
         });
     }
-    // console.log(this.employees);
   }
 
   getMonday(date) {
@@ -204,10 +354,52 @@ export class HomepageComponent implements OnInit {
     this.toggleEdit();
   }
 
+  removeFromSchedule(employeeId, day) {
+    for (let i = 0; this.employees.length > i; i++) {
+      if (this.employees[i].id === employeeId) {
+        if (day === 'monday') {
+          this.employees[i].monday.startTime = '0';
+          this.employees[i].monday.endTime = '0';
+          break;
+        }
+        if (day === 'tuesday') {
+          this.employees[i].tuesday.startTime = '0';
+          this.employees[i].tuesday.endTime = '0';
+          break;
+        }
+        if (day === 'wednesday') {
+          this.employees[i].wednesday.startTime = '0';
+          this.employees[i].wednesday.endTime = '0';
+          break;
+        }
+        if (day === 'thursday') {
+          this.employees[i].thursday.startTime = '0';
+          this.employees[i].thursday.endTime = '0';
+          break;
+        }
+        if (day === 'friday') {
+          this.employees[i].friday.startTime = '0';
+          this.employees[i].friday.endTime = '0';
+          break;
+        }
+        if (day === 'saturday') {
+          this.employees[i].saturday.startTime = '0';
+          this.employees[i].saturday.endTime = '0';
+          break;
+        }
+        if (day === 'sunday') {
+          this.employees[i].sunday.startTime = '0';
+          this.employees[i].sunday.endTime = '0';
+          break;
+        }
+      }
+    }
+  }
+
   saveEdit() {
     // tslint:disable-next-line: prefer-for-of
     for (let e = 0; e < this.employees.length; e++) {
-      // debugger;
+      debugger;
       this.uploadSchedule(this.employees[e].monday, this.monday);
       this.uploadSchedule(this.employees[e].tuesday, this.tuesday);
       this.uploadSchedule(this.employees[e].wednesday, this.wednesday);
@@ -221,23 +413,21 @@ export class HomepageComponent implements OnInit {
   }
 
   async uploadSchedule(employeeDay, day) {
+    // debugger;
     if (employeeDay.startTime !== `` && employeeDay.endTime !== ``) {
-      if (employeeDay.startTime === '0') {
-        // console.log(employeeDay);
+      console.log(employeeDay.startTime);
+      if (employeeDay.startTime === '0' || employeeDay.startTime === 'off') {
         await this.scheduleService.removeFromSchedule(employeeDay.id).toPromise().then();
       } else {
-        // console.log(`day`, day);
         const newStartDate = this.convertToHoursAndMinutes(employeeDay.startTime, day);
         const newEndDate = this.convertToHoursAndMinutes(employeeDay.endTime, day);
         if (employeeDay.id != null) {
           const updateSchedule = { id: employeeDay.id, employeeId: employeeDay.employeeId, startTime: newStartDate, endTime: newEndDate };
           await this.scheduleService.updateScheduleById(updateSchedule).toPromise().then(res => {
-            // console.log(updateSchedule);
           });
         } else {
           const createSchedule = { employeeId: employeeDay.employeeId, startTime: newStartDate, endTime: newEndDate };
           await this.scheduleService.createScheduleById(createSchedule).toPromise().then(res => {
-            // console.log(createSchedule);
           });
         }
       }
@@ -246,14 +436,15 @@ export class HomepageComponent implements OnInit {
 
   convertToHoursAndMinutes(time, day) {
     const dayOfTheWeek = day;
-    // console.log(`dayOfTheWeek`, dayOfTheWeek);
     time.replace(/\s/g, '');
     let hour = time.split(`:`)[0];
     if (time.substring(time.length - 2, time.length).toUpperCase() === `PM`) {
+      // tslint:disable-next-line: radix
       hour = (parseInt(hour) + 12).toString();
     } else if (time.substring(time.length - 2, time.length).toUpperCase() !== `PM`
       || time.substring(time.length - 2, time.length).toUpperCase() !== `AM`) {
       if (hour < 7) {
+        // tslint:disable-next-line: radix
         hour = (parseInt(hour) + 12).toString();
       }
     }
@@ -277,15 +468,12 @@ export class HomepageComponent implements OnInit {
   calculateEmployeeWeeklyHours(id, startTime, endTime) {
     const start = moment(startTime);
     const end = moment(endTime);
-    // console.log(end.diff(start, 'hours'));
     this.employees[id].hours = this.employees[id].hours + end.diff(start, 'hours');
   }
 
   async printPage() {
     await this.getActiveEmployeesNextWeek();
-    console.log(this.employees);
     this.printWeek.setWeekToPrint(this.employees, this.employeesNextWeek);
-    // debugger;
     this.printWeek.setWeek({
       monday: this.monday,
       tuesday: this.tuesday,
@@ -295,23 +483,21 @@ export class HomepageComponent implements OnInit {
       saturday: this.saturday,
       sunday: this.sunday
     });
-    let monday = new Date(), tuesday = new Date(), wednesday = new Date(), thursday = new Date(),
-      friday = new Date(), saturday = new Date(), sunday = new Date()
     this.printWeek.setNextWeek({
-      monday: monday.setDate(this.monday.getDate() + 7),
-      tuesday: tuesday.setDate(this.tuesday.getDate() + 7),
-      wednesday: wednesday.setDate(this.wednesday.getDate() + 7),
-      thursday: thursday.setDate(this.thursday.getDate() + 7),
-      friday: friday.setDate(this.friday.getDate() + 7),
-      saturday: saturday.setDate(this.saturday.getDate() + 7),
-      sunday: sunday.setDate(this.sunday.getDate() + 7)
+      monday: moment(this.monday).add(7, 'days').toDate(),
+      tuesday: moment(this.tuesday).add(7, 'days').toDate(),
+      wednesday: moment(this.wednesday).add(7, 'days').toDate(),
+      thursday: moment(this.thursday).add(7, 'days').toDate(),
+      friday: moment(this.friday).add(7, 'days').toDate(),
+      saturday: moment(this.saturday).add(7, 'days').toDate(),
+      sunday: moment(this.sunday).add(7, 'days').toDate()
     });
   }
 
   async getActiveEmployeesNextWeek() {
-    let newMonday = new Date();
+    const newMonday = new Date();
     newMonday.setDate(this.monday.getDate() + 7);
-    let newSunday = new Date();
+    const newSunday = new Date();
     newSunday.setDate(this.sunday.getDate() + 7);
     this.employeesNextWeek = [{
       id: null,
@@ -404,6 +590,5 @@ export class HomepageComponent implements OnInit {
           }
         });
     }
-    console.log(this.employeesNextWeek);
   }
 }

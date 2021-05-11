@@ -24,8 +24,7 @@ export class ScheduleService {
   }
 
   getAllScheduledByWeekByEmployee(startDate, endDate, employeeId): Observable<any> {
-    return this.http.get(`${environment.mainAPIUrl}/Schedule/getByWeekByEmployee?startDate=
-    ${startDate}&endDate=${endDate}&id=${employeeId}`);
+    return this.http.get(`${environment.mainAPIUrl}/Schedule/getByWeekByEmployee?startDate=${startDate}&endDate=${endDate}&id=${employeeId}`);
   }
 
   updateScheduleById(schedule): Observable<any> {
